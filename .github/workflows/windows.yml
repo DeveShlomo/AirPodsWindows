@@ -80,7 +80,8 @@ jobs:
       - name: Install vcpkg dependencies
         working-directory: Build
         run: |
-          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows --recurse
+          set VCPKG_FEATURE_FLAGS=-manifests
+          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows
 
       - name: Generate project and build
         working-directory: Build
