@@ -471,6 +471,8 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 void MainWindow::PlayAnimation()
 {
     _isAnimationPlaying = true;
+    // Stop player and reset position for clean replay
+    // Qt's QMediaPlayer handles these synchronously in the event loop
     _mediaPlayer->stop();
     _mediaPlayer->setPosition(0);
     _videoWidget->show();
