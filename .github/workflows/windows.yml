@@ -81,7 +81,7 @@ jobs:
         working-directory: Build
         run: |
           ren ..\vcpkg.json vcpkg.json.bak
-          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows
+          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows boost-pfr:x86-windows boost-stacktrace:x86-windows
           ren ..\vcpkg.json.bak vcpkg.json
 
       - name: Generate project and build
