@@ -229,7 +229,9 @@ message("Found 'magic_enum' (${magic_enum_VERSION}).")
 # stacktrace
 #
 if (MSVC)
-    set(APD_STACKTRACE_COMPONENT stacktrace_windbg)
+    # Use noop backend for now (no stack trace, but compiles without issues)
+    # windbg backend requires additional setup in newer Boost versions
+    set(APD_STACKTRACE_COMPONENT stacktrace_noop)
 endif()
 
 find_package(Boost REQUIRED COMPONENTS ${APD_STACKTRACE_COMPONENT})
