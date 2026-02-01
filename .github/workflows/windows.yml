@@ -44,8 +44,8 @@ jobs:
       - name: Generate dependencies cache key
         if: env.CACHE_DEPS == 'true'
         run: |
-          curl -o Build/DepsRef.json https://api.github.com/repos/SpriteOvO/AirPodsDesktop-Deps/git/refs/heads/main
-          type Build/DepsRef.json
+          curl -o Build\DepsRef.json https://api.github.com/repos/SpriteOvO/AirPodsDesktop-Deps/git/refs/heads/main
+          type Build\DepsRef.json
 
       - name: Dependencies cache
         id: cache-deps
