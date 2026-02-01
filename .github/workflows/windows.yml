@@ -77,6 +77,11 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
+      - name: Install vcpkg dependencies
+        working-directory: Build
+        run: |
+          .\vcpkg\vcpkg install --triplet=x86-windows --x-manifest-root=${{ github.workspace }}
+
       - name: Generate project and build
         working-directory: Build
         run: |
