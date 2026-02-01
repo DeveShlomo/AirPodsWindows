@@ -79,10 +79,7 @@ jobs:
 
       - name: Install dependencies from manifest
         run: |
-          echo Installing vcpkg dependencies...
-          .\Build\vcpkg\vcpkg install --triplet=x86-windows --x-manifest-root=. --debug
-          echo Checking installed packages...
-          dir Build\vcpkg\installed\x86-windows\include
+          .\Build\vcpkg\vcpkg install --triplet=x86-windows --x-manifest-root=.
 
       - name: Generate project and build
         working-directory: Build
