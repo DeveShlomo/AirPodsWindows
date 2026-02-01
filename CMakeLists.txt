@@ -219,19 +219,8 @@ message("Fetch 'SingleApplication' done.")
 
 # magic_enum
 #
-find_package(magic_enum CONFIG)
-if (magic_enum_FOUND)
-    message("Found 'magic_enum' (${magic_enum_VERSION}).")
-else()
-    message("Fetching 'magic_enum'...")
-    FetchContent_Declare(
-        magic_enum
-        GIT_REPOSITORY "https://github.com/Neargye/magic_enum.git"
-        GIT_TAG "3d1f6a5a2a3fbcba077e00ad0ccc2dd9fefc2ca7" # v0.7.3
-    )
-    FetchContent_MakeAvailable(magic_enum)
-    message("Fetch 'magic_enum' done.")
-endif()
+find_package(magic_enum CONFIG REQUIRED)
+message("Found 'magic_enum' (${magic_enum_VERSION}).")
 
 #
 # Boost libraries
