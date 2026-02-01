@@ -80,14 +80,14 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Install Qt 5.15.2 (msvc2022 32-bit)
-        # 使用 qt-actions/setup-qt@v2 来安装 Qt；它是常用的 setup-qt action
-        # arch 可按需改为 msvc2022_64 / msvc2019_32 等，要与 PLATFORM_NAME (-A) 保持一致
-        uses: qt-actions/setup-qt@v2
+      - name: Install Qt 5.15.2 (msvc2019 32-bit)
+        uses: jurplel/install-qt-action@v4
         with:
           version: '5.15.2'
           host: 'windows'
-          arch: 'msvc2022_32'
+          target: 'desktop'
+          arch: 'win32_msvc2019'
+          archives: 'qtbase qtsvg qttools'
 
       - name: Find Qt5Config.cmake and export Qt5_DIR and add Qt bin to PATH
         shell: powershell
