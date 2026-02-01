@@ -1,5 +1,5 @@
 //
-// AirPodsDesktop - AirPods Desktop User Experience Enhancement Program.
+// AirPodsWindows - AirPods Desktop User Experience Enhancement Program.
 // Copyright (C) 2021-2022 SpriteOvO
 //
 // This program is free software: you can redistribute it and/or modify
@@ -459,7 +459,10 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 
         _mediaPlayer->setMedia(QUrl{media});
 
-        PlayAnimation();
+        // Only play animation if window is visible, otherwise showEvent will handle it
+        if (_isVisible) {
+            PlayAnimation();
+        }
     }
 
     _cacheModel = model;
@@ -468,8 +471,15 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 void MainWindow::PlayAnimation()
 {
     _isAnimationPlaying = true;
-    _mediaPlayer->play();
+    // Stop player and reset position for clean replay
+    // Qt's QMediaPlayer handles these synchronously in the event loop
+    _mediaPlayer->stop();
+    _mediaPlayer->setPosition(0);
     _videoWidget->show();
+    // Reinitialize video widget rendering surface after hide/show cycle
+    // This is called only on window show (not during playback loop), so performance impact is minimal
+    _mediaPlayer->setVideoOutput(_videoWidget);
+    _mediaPlayer->play();
 }
 
 void MainWindow::StopAnimation()

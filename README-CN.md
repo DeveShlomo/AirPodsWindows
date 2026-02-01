@@ -1,7 +1,7 @@
 <h1 align="center">
     <a href="https://github.com/YimingZhanshen/AirPodsWindows"><img src="/Source/Resource/Image/Icon.svg" alt="Icon" width="128"></a>
     <br>
-    AirPodsDesktop
+    AirPodsWindows
 </h1>
 <p align="center">AirPods 桌面用户体验增强程序 - Windows 平台完整 ANC 控制支持</p>
 <p align="center">
@@ -59,7 +59,7 @@
 查看 [构建说明](/Docs/Build.md)。
 
 ## 🤝 贡献
-*AirPodsDesktop* 是一个开源项目，您可以通过以下方式贡献：
+*AirPodsWindows* 是一个开源项目，您可以通过以下方式贡献：
 * [打开问题](https://github.com/YimingZhanshen/AirPodsWindows/issues/new/choose) 来报告错误或建议新功能。
 * [提交 PR](https://github.com/YimingZhanshen/AirPodsWindows/compare) 来修复已知 BUG 或尝试 TODO 列表中的事项。
 * [翻译到其他语言](/CONTRIBUTING.md#-translation-guide) 或 [改进现有的翻译](/CONTRIBUTING.md#-translation-guide)。

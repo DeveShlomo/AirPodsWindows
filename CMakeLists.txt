@@ -1,5 +1,5 @@
 #
-# AirPodsDesktop - AirPods Desktop User Experience Enhancement Program.
+# AirPodsWindows - AirPods Desktop User Experience Enhancement Program.
 # Copyright (C) 2021-2022 SpriteOvO
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,11 +19,11 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(
-    AirPodsDesktop
-    VERSION 0.4.1 # Don't forget to bump the version in `vcpkg.json` as well
+    AirPodsWindows
+    VERSION 1.1.0 # Don't forget to bump the version in `vcpkg.json` as well
     LANGUAGES C CXX
     DESCRIPTION "AirPods desktop user experience enhancement program"
-    HOMEPAGE_URL "https://github.com/SpriteOvO/AirPodsDesktop"
+    HOMEPAGE_URL "https://github.com/YimingZhanshen/AirPodsWindows"
 )
 
 include(FetchContent)

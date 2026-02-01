@@ -1,5 +1,5 @@
 //
-// AirPodsDesktop - AirPods Desktop User Experience Enhancement Program.
+// AirPodsWindows - AirPods Desktop User Experience Enhancement Program.
 // Copyright (C) 2021-2022 SpriteOvO
 //
 // This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,14 @@
 
 namespace Config {
 
-#define CONFIG_VERSION_STRING           "@AirPodsDesktop_VERSION_MAJOR@.@AirPodsDesktop_VERSION_MINOR@.@AirPodsDesktop_VERSION_PATCH@"
-#define CONFIG_WINRC_VERSION_NUMBERS    @AirPodsDesktop_VERSION_MAJOR@, @AirPodsDesktop_VERSION_MINOR@, @AirPodsDesktop_VERSION_PATCH@, 0
+#define CONFIG_VERSION_STRING           "@AirPodsWindows_VERSION_MAJOR@.@AirPodsWindows_VERSION_MINOR@.@AirPodsWindows_VERSION_PATCH@"
+#define CONFIG_WINRC_VERSION_NUMBERS    @AirPodsWindows_VERSION_MAJOR@, @AirPodsWindows_VERSION_MINOR@, @AirPodsWindows_VERSION_PATCH@, 0
 #define CONFIG_WINRC_VERSION_STRING     CONFIG_VERSION_STRING ".0"
 #define CONFIG_PROGRAM_NAME             "@PROJECT_NAME@"
 #define CONFIG_DESCRIPTION              "@PROJECT_DESCRIPTION@"
 #define CONFIG_COPYRIGHT                "Copyright © 2021-2022 SpriteOvO. All rights reserved."
 #define CONFIG_CPACK_SYSTEM_NAME        "@CPACK_SYSTEM_NAME@"
-#define CONFIG_URL_REPO                 "https://github.com/SpriteOvO/" CONFIG_PROGRAM_NAME
+#define CONFIG_URL_REPO                 "https://github.com/YimingZhanshen/" CONFIG_PROGRAM_NAME
 #define CONFIG_URL_ISSUES               CONFIG_URL_REPO "/issues"
 #define CONFIG_URL_RELEASES             CONFIG_URL_REPO "/releases"
 #define CONFIG_URL_LICENSE              CONFIG_URL_REPO "/blob/main/LICENSE"
@@ -49,9 +49,9 @@ constexpr inline auto TranslationLocales = "@APD_TRANSLATION_LOCALES@";
 
 namespace Version {
 
-constexpr inline uint32_t Major = @AirPodsDesktop_VERSION_MAJOR@;
-constexpr inline uint32_t Minor = @AirPodsDesktop_VERSION_MINOR@;
-constexpr inline uint32_t Patch = @AirPodsDesktop_VERSION_PATCH@;
+constexpr inline uint32_t Major = @AirPodsWindows_VERSION_MAJOR@;
+constexpr inline uint32_t Minor = @AirPodsWindows_VERSION_MINOR@;
+constexpr inline uint32_t Patch = @AirPodsWindows_VERSION_PATCH@;
 
 constexpr inline auto String = CONFIG_VERSION_STRING;
 

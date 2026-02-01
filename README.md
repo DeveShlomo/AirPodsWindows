@@ -1,7 +1,7 @@
 <h1 align="center">
     <a href="https://github.com/YimingZhanshen/AirPodsWindows"><img src="/Source/Resource/Image/Icon.svg" alt="Icon" width="128"></a>
     <br>
-    AirPodsDesktop
+    AirPodsWindows
 </h1>
 <p align="center">AirPods desktop user experience enhancement program - Full ANC control on Windows</p>
 <p align="center">
@@ -59,7 +59,7 @@
 See the [Build Instructions](/Docs/Build.md).
 
 ## 🤝 Contribute
-*AirPodsDesktop* is an open source project, here are some ways you can contribute:
+*AirPodsWindows* is an open source project, here are some ways you can contribute:
 * [Open an issue](https://github.com/YimingZhanshen/AirPodsWindows/issues/new/choose) to report bugs or suggest new features.
 * [Submit a PR](https://github.com/YimingZhanshen/AirPodsWindows/compare) to fix a known bug or try something from the TODO list.
 * [Translate to other languages](/CONTRIBUTING.md#-translation-guide) or [improve existing translations](/CONTRIBUTING.md#-translation-guide).

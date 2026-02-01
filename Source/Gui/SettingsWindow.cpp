@@ -1,5 +1,5 @@
 //
-// AirPodsDesktop - AirPods Desktop User Experience Enhancement Program.
+// AirPodsWindows - AirPods Desktop User Experience Enhancement Program.
 // Copyright (C) 2021-2022 SpriteOvO
 //
 // This program is free software: you can redistribute it and/or modify
@@ -86,12 +86,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog{parent}
 
     auto versionText =
         QString{"<a href=\"%1\">v%2</a>"}
-            .arg("https://github.com/SpriteOvO/AirPodsDesktop/releases/tag/" CONFIG_VERSION_STRING)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/" CONFIG_VERSION_STRING)
             .arg(CONFIG_VERSION_STRING);
 #if defined APD_BUILD_GIT_HASH
     versionText +=
         QString{" (<a href=\"%1\">%2</a>)"}
-            .arg("https://github.com/SpriteOvO/AirPodsDesktop/commit/" APD_BUILD_GIT_HASH)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/commit/" APD_BUILD_GIT_HASH)
             .arg(QString{APD_BUILD_GIT_HASH}.left(7));
 #endif
     _ui.lbVersion->setText(versionText);
@@ -447,7 +447,7 @@ void SettingsWindow::On_cbLanguages_currentIndexChanged(int index)
         _ui.cbLanguages->setCurrentIndex(_lastLanguageIndex);
         // clang-format off
         QDesktopServices::openUrl(QUrl{
-            "https://github.com/SpriteOvO/AirPodsDesktop/blob/main/CONTRIBUTING.md#-translation-guide"
+            "https://github.com/YimingZhanshen/AirPodsWindows/blob/main/CONTRIBUTING.md#-translation-guide"
         });
         // clang-format on
     }

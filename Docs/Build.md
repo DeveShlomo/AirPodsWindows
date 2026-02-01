@@ -2,8 +2,8 @@
 
 ## Preparations
 ```
-git clone --recursive https://github.com/SpriteOvO/AirPodsDesktop.git
-cd AirPodsDesktop
+git clone --recursive https://github.com/YimingZhanshen/AirPodsWindows.git
+cd AirPodsWindows
 mkdir Build
 cd Build
 ```

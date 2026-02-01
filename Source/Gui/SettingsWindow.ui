@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>AirPodsDesktop Settings</string>
+   <string>AirPodsWindows Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -508,7 +508,7 @@
               </font>
              </property>
              <property name="text">
-              <string notr="true">AirPodsDesktop</string>
+              <string notr="true">AirPodsWindows</string>
              </property>
             </widget>
            </item>
