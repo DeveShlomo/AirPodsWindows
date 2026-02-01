@@ -1,6 +1,6 @@
 name: Windows Builds
 
-on:
+于:
   push:
     paths-ignore:
       - '**.md'
@@ -50,7 +50,7 @@ jobs:
       - name: Generate dependencies cache key
         if: env.CACHE_DEPS == 'true'
         run: |
-          curl -o Build\DepsRef.json https://api.github.com/repos/SpriteOvO/AirPodsDesktop-Deps/git/refs/heads/main
+          curl -o Build\DepsRef.json https://api.github.com/repos/YimingZhanshen/AirPodsWindows-Deps/git/refs/heads/main
           type Build\DepsRef.json
 
       - name: Dependencies cache
@@ -65,7 +65,7 @@ jobs:
         if: env.CACHE_DEPS != 'true' || steps.cache-deps.outputs.cache-hit != 'true'
         working-directory: Build
         run: |
-          git clone --recursive https://github.com/SpriteOvO/AirPodsDesktop-Deps.git
+          git clone --recursive https://github.com/YimingZhanshen/AirPodsWindows-Deps.git
           dir AirPodsDesktop-Deps
 
       - name: Print CMake version
