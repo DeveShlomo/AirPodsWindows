@@ -226,19 +226,24 @@ message("Found 'magic_enum' (${magic_enum_VERSION}).")
 # Boost libraries
 #
 
-# stacktrace
+# Find Boost (without components for stacktrace)
 #
-if (MSVC)
-    # Use noop backend for now (no stack trace, but compiles without issues)
-    # windbg backend requires additional setup in newer Boost versions
-    set(APD_STACKTRACE_COMPONENT stacktrace_noop)
-endif()
-
-find_package(Boost REQUIRED COMPONENTS ${APD_STACKTRACE_COMPONENT})
+find_package(Boost REQUIRED)
 
 # pfr
 #
 add_library(Boost::pfr ALIAS Boost::boost)
+
+# stacktrace - create interface library manually
+#
+add_library(boost_stacktrace INTERFACE)
+target_link_libraries(boost_stacktrace INTERFACE Boost::boost)
+if (MSVC)
+    # Link dbghelp for Windows stack traces
+    target_link_libraries(boost_stacktrace INTERFACE dbghelp)
+    target_compile_definitions(boost_stacktrace INTERFACE BOOST_STACKTRACE_USE_WINDBG)
+endif()
+add_library(Boost::stacktrace_windbg ALIAS boost_stacktrace)
 
 ##################################################
 
@@ -474,7 +479,7 @@ target_link_libraries(
     SingleApplication::SingleApplication
     magic_enum::magic_enum
     Boost::pfr
-    Boost::${APD_STACKTRACE_COMPONENT}
+    Boost::stacktrace_windbg
 )
 
 ##################################################
