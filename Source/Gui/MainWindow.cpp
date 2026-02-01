@@ -476,6 +476,8 @@ void MainWindow::PlayAnimation()
     _mediaPlayer->stop();
     _mediaPlayer->setPosition(0);
     _videoWidget->show();
+    // Reinitialize video widget rendering surface after hide/show cycle
+    _mediaPlayer->setVideoOutput(_videoWidget);
     _mediaPlayer->play();
 }
 
