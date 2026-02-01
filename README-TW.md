@@ -87,7 +87,7 @@
 
 ### 相關專案
 * [MagicPods](https://magicpods.app/) - 商業 AirPods Windows 應用程式
-* [AirPodsWindows](https://github.com/SpriteOvO/AirPodsWindows) - 原始專案（本專案從此分叉）
+* [AirPodsDesktop](https://github.com/SpriteOvO/AirPodsDesktop) - 原始專案（本專案從此分叉）
 
 ## 📜 授權
 本專案採用 [GPLv3 授權條款](/LICENSE)。

@@ -87,7 +87,7 @@
 
 ### 相关项目
 * [MagicPods](https://magicpods.app/) - 商业 AirPods Windows 应用
-* [AirPodsWindows](https://github.com/SpriteOvO/AirPodsWindows) - 原始项目（本项目 Fork 自此）
+* [AirPodsDesktop](https://github.com/SpriteOvO/AirPodsDesktop) - 原始项目（本项目 Fork 自此）
 
 ## 📜 许可证
 本项目采用 [GPLv3 许可证](/LICENSE)。

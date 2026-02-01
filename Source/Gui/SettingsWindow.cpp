@@ -86,12 +86,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog{parent}
 
     auto versionText =
         QString{"<a href=\"%1\">v%2</a>"}
-            .arg("https://github.com/SpriteOvO/AirPodsWindows/releases/tag/" CONFIG_VERSION_STRING)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/" CONFIG_VERSION_STRING)
             .arg(CONFIG_VERSION_STRING);
 #if defined APD_BUILD_GIT_HASH
     versionText +=
         QString{" (<a href=\"%1\">%2</a>)"}
-            .arg("https://github.com/SpriteOvO/AirPodsWindows/commit/" APD_BUILD_GIT_HASH)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/commit/" APD_BUILD_GIT_HASH)
             .arg(QString{APD_BUILD_GIT_HASH}.left(7));
 #endif
     _ui.lbVersion->setText(versionText);
@@ -322,7 +322,7 @@ void SettingsWindow::InitCreditsText()
             // clang-format off
             { "librepods", "https://github.com/kavishdevar/librepods", "AAP protocol & MagicAAP driver" },
             { "OpenPods", "https://github.com/adolfintel/OpenPods", "AirPods BLE protocol" },
-            { "AirPodsWindows", "https://github.com/SpriteOvO/AirPodsWindows", "Original project" }
+            { "AirPodsDesktop", "https://github.com/SpriteOvO/AirPodsDesktop", "Original project" }
             // clang-format on
         };
 
@@ -447,7 +447,7 @@ void SettingsWindow::On_cbLanguages_currentIndexChanged(int index)
         _ui.cbLanguages->setCurrentIndex(_lastLanguageIndex);
         // clang-format off
         QDesktopServices::openUrl(QUrl{
-            "https://github.com/SpriteOvO/AirPodsWindows/blob/main/CONTRIBUTING.md#-translation-guide"
+            "https://github.com/YimingZhanshen/AirPodsWindows/blob/main/CONTRIBUTING.md#-translation-guide"
         });
         // clang-format on
     }
