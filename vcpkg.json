@@ -8,7 +8,10 @@
     },
     "cxxopts",
     "nlohmann-json",
-    "magic-enum",
+    {
+      "name": "magic-enum",
+      "version>=": "0.7.3"
+    },
     "boost-pfr",
     "boost-stacktrace"
   ],
