@@ -76,7 +76,6 @@ jobs:
         run: |
           git clone --recursive https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
-          .\vcpkg\vcpkg install magic-enum:x86-windows
 
       - name: Generate project and build
         working-directory: Build
