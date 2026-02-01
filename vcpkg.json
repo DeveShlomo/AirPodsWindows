@@ -13,7 +13,10 @@
       "version>=": "0.7.3"
     },
     "boost-pfr",
-    "boost-stacktrace"
+    {
+      "name": "boost-stacktrace",
+      "features": ["windbg"]
+    }
   ],
   "builtin-baseline": "2fee3d30d0f4648520a693f8ee3341c883fc5761"
 }
