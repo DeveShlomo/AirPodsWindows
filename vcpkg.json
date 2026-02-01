@@ -8,12 +8,9 @@
     },
     "cxxopts",
     "nlohmann-json",
-    {
-      "name": "magic-enum",
-      "version>=": "0.7.3"
-    },
+    "magic-enum",
     "boost-pfr",
-    "boost-stacktrace-windbg"
+    "boost-stacktrace"
   ],
-  "builtin-baseline": "2fee3d30d0f4648520a693f8ee3341c883fc5761"
+  "builtin-baseline": "7ba0ba7334c3346e7eee1e049ba85da193a8d821"
 }
