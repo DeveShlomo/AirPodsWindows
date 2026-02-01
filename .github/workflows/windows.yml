@@ -80,7 +80,7 @@ jobs:
       - name: Install vcpkg dependencies
         working-directory: Build
         run: |
-          .\vcpkg\vcpkg install --triplet=x86-windows --x-manifest-root=${{ github.workspace }}
+          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows
 
       - name: Generate project and build
         working-directory: Build
