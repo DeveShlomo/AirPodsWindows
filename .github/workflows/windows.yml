@@ -78,9 +78,8 @@ jobs:
           .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
       - name: Install dependencies from manifest
-        working-directory: Build
         run: |
-          .\vcpkg\vcpkg install --triplet=x86-windows
+          .\Build\vcpkg\vcpkg install --triplet=x86-windows
 
       - name: Generate project and build
         working-directory: Build
