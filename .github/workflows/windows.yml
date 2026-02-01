@@ -21,13 +21,12 @@ env:
   PLATFORM_NAME: Win32
   BUILD_TYPE: RelWithDebInfo
   UPLOAD_ARTIFACT: true
-  CACHE_DEPS: false
+  CACHE_DEPS: true
   FIXED_CMAKE_VERSION: 3.21.4
 
 jobs:
   Build:
-    # 使用 windows-2022 runner（带有 Visual Studio 2022）
-    runs-on: windows-2022
+    runs-on: windows-2019
 
     defaults:
       run:
@@ -35,7 +34,6 @@ jobs:
 
     steps:
       - name: Checkout repository
-        # 将 checkout 升级为 v4（较新、受支持）
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -47,12 +45,11 @@ jobs:
         if: env.CACHE_DEPS == 'true'
         run: |
           curl -o Build/DepsRef.json https://api.github.com/repos/SpriteOvO/AirPodsDesktop-Deps/git/refs/heads/main
-          type DepsRef.json
+          type Build/DepsRef.json
 
       - name: Dependencies cache
         id: cache-deps
         if: env.CACHE_DEPS == 'true'
-        # 升级 actions/cache 到 v4
         uses: actions/cache@v4
         with:
           path: Build/AirPodsDesktop-Deps
@@ -80,24 +77,16 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Install Qt 5.15.2 (msvc2019 32-bit)
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: '5.15.2'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win32_msvc2019'
-          archives: 'qtbase qtsvg qttools'
-
       - name: Generate project and build
         working-directory: Build
         run: |
           mkdir ${{ env.BUILD_TYPE }} && cd ${{ env.BUILD_TYPE }}
 
-          cmake -G "Visual Studio 17 2022" ^
+          cmake -G "Visual Studio 16 2019" ^
                 -A ${{ env.PLATFORM_NAME }} ^
                 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
+                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/msvc2019 ^
                 -DAPD_GENERATE_INSTALLER=ON ^
                 -DAPD_BUILD_GIT_HASH=${{ github.sha }} ^
                 ../../
@@ -116,7 +105,6 @@ jobs:
           move AirPodsDesktop-*-win32 AirPodsDesktop-${{ github.sha }}-win32
 
       - name: Upload artifact - Installer
-        # 升级 upload-artifact 到 v4
         uses: actions/upload-artifact@v4
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
