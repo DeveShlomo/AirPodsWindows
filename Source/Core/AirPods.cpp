@@ -564,7 +564,7 @@ void Manager::OnBoundDeviceAddressChanged(uint64_t address)
 
     _deviceName = QString::fromStdString([&] {
         auto name = _boundDevice->GetName();
-        // See https://github.com/SpriteOvO/AirPodsWindows/issues/15
+        // See https://github.com/SpriteOvO/AirPodsDesktop/issues/15
         return name.find("Bluetooth") != std::string::npos ? std::string{} : name;
     }());
 

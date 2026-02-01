@@ -174,7 +174,7 @@ std::optional<ReleaseInfo> ParseMultipleReleasesResponseFirst(const std::string 
 std::optional<ReleaseInfo> FetchLatestStableRelease()
 {
     const cpr::Response response = cpr::Get(
-        cpr::Url{"https://api.github.com/repos/SpriteOvO/AirPodsWindows/releases/latest"},
+        cpr::Url{"https://api.github.com/repos/YimingZhanshen/AirPodsWindows/releases/latest"},
         cpr::Header{{"Accept", "application/vnd.github.v3+json"}});
 
     if (response.status_code != 200) {
@@ -192,7 +192,7 @@ std::optional<ReleaseInfo> FetchReleaseByVersion(const QVersionNumber &version)
 {
     const std::string tag = version.toString().toStdString();
     const cpr::Response response = cpr::Get(
-        cpr::Url{"https://api.github.com/repos/SpriteOvO/AirPodsWindows/releases/tags/" + tag},
+        cpr::Url{"https://api.github.com/repos/YimingZhanshen/AirPodsWindows/releases/tags/" + tag},
         cpr::Header{{"Accept", "application/vnd.github.v3+json"}});
 
     if (response.status_code != 200) {
@@ -211,7 +211,7 @@ std::optional<ReleaseInfo> FetchLatestRelease(bool includePreRelease)
     if (includePreRelease) {
 
         const cpr::Response response = cpr::Get(
-            cpr::Url{"https://api.github.com/repos/SpriteOvO/AirPodsWindows/releases"},
+            cpr::Url{"https://api.github.com/repos/YimingZhanshen/AirPodsWindows/releases"},
             cpr::Header{{"Accept", "application/vnd.github.v3+json"}});
 
         if (response.status_code != 200) {
