@@ -58,7 +58,7 @@ jobs:
         if: env.CACHE_DEPS == 'true'
         uses: actions/cache@v4
         with:
-          path: Build/AirPodsDesktop-Deps
+          path: Build/AirPodsWindows-Deps
           key: ${{ hashFiles('Build/DepsRef.json') }}-${{ matrix.platform }}
 
       - name: Clone dependencies
@@ -66,7 +66,7 @@ jobs:
         working-directory: Build
         run: |
           git clone --recursive https://github.com/YimingZhanshen/AirPodsWindows-Deps.git
-          dir AirPodsDesktop-Deps
+          dir AirPodsWindows-Deps
 
       - name: Print CMake version
         run: cmake --version
@@ -100,7 +100,7 @@ jobs:
                 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
                 -DVCPKG_MANIFEST_MODE=OFF ^
                 -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} ^
-                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/${{ env.QT_DIR }} ^
+                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsWindows-Deps/Qt/5.15.2/${{ env.QT_DIR }} ^
                 -DAPD_GENERATE_INSTALLER=ON ^
                 -DAPD_BUILD_GIT_HASH=${{ github.sha }} ^
                 ../../
