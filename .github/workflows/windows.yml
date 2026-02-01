@@ -80,9 +80,10 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Install Qt 5.15.2 (msvc2022 32-bit) 
-        # 使用 lukka/get-qt@v3 作为示例安装器；你可替换为其它 setup-qt action
-        uses: lukka/get-qt@v3
+      - name: Install Qt 5.15.2 (msvc2022 32-bit)
+        # 使用 qt-actions/setup-qt@v2 来安装 Qt；它是常用的 setup-qt action
+        # arch 可按需改为 msvc2022_64 / msvc2019_32 等，要与 PLATFORM_NAME (-A) 保持一致
+        uses: qt-actions/setup-qt@v2
         with:
           version: '5.15.2'
           host: 'windows'
@@ -92,7 +93,7 @@ jobs:
         shell: powershell
         run: |
           Write-Host "Searching for Qt5Config.cmake..."
-          # 常见安装位置（包括 where lukka/get-qt 可能放置的位置）
+          # 常见安装位置（包括 setup-qt 可能放置的位置）
           $candidates = @(
             'C:\Qt',
             'C:\hostedtoolcache\windows',
@@ -114,7 +115,6 @@ jobs:
             $qt5_dir = $found.Directory.FullName
             Write-Host "Found Qt5Config.cmake at $($found.FullName)"
             Write-Host "Setting Qt5_DIR = $qt5_dir"
-            "# 为 CMake 提供 Qt5Config 路径" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             "Qt5_DIR=$qt5_dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
             # 计算 Qt 根目录并加入 PATH，便于 windeployqt 等可执行文件可被调用
