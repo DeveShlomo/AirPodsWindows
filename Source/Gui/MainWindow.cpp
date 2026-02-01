@@ -471,6 +471,7 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 void MainWindow::PlayAnimation()
 {
     _isAnimationPlaying = true;
+    _mediaPlayer->stop();
     _mediaPlayer->setPosition(0);
     _videoWidget->show();
     _mediaPlayer->play();
