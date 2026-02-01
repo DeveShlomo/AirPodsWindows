@@ -459,7 +459,10 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 
         _mediaPlayer->setMedia(QUrl{media});
 
-        PlayAnimation();
+        // Only play animation if window is visible, otherwise showEvent will handle it
+        if (_isVisible) {
+            PlayAnimation();
+        }
     }
 
     _cacheModel = model;
@@ -468,8 +471,9 @@ void MainWindow::SetAnimation(std::optional<Core::AirPods::Model> model)
 void MainWindow::PlayAnimation()
 {
     _isAnimationPlaying = true;
-    _mediaPlayer->play();
+    _mediaPlayer->setPosition(0);
     _videoWidget->show();
+    _mediaPlayer->play();
 }
 
 void MainWindow::StopAnimation()
