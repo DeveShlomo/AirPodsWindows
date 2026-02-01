@@ -80,6 +80,56 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
 
+      - name: Install Qt 5.15.2 (msvc2022 32-bit) 
+        # 使用 lukka/get-qt@v3 作为示例安装器；你可替换为其它 setup-qt action
+        uses: lukka/get-qt@v3
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          arch: 'msvc2022_32'
+
+      - name: Find Qt5Config.cmake and export Qt5_DIR and add Qt bin to PATH
+        shell: powershell
+        run: |
+          Write-Host "Searching for Qt5Config.cmake..."
+          # 常见安装位置（包括 where lukka/get-qt 可能放置的位置）
+          $candidates = @(
+            'C:\Qt',
+            'C:\hostedtoolcache\windows',
+            'C:\msys64',
+            'C:\Program Files\Qt'
+          )
+          $found = $null
+          foreach ($p in $candidates) {
+            if (Test-Path $p) {
+              $f = Get-ChildItem -Path $p -Filter 'Qt5Config.cmake' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($f) { $found = $f; break }
+            }
+          }
+          if (-not $found) {
+            # 作为最后手段进行全盘搜索（在 CI 上这通常可以工作，但会慢一些）
+            $found = Get-ChildItem -Path C:\ -Filter 'Qt5Config.cmake' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          }
+          if ($found) {
+            $qt5_dir = $found.Directory.FullName
+            Write-Host "Found Qt5Config.cmake at $($found.FullName)"
+            Write-Host "Setting Qt5_DIR = $qt5_dir"
+            "# 为 CMake 提供 Qt5Config 路径" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            "Qt5_DIR=$qt5_dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+            # 计算 Qt 根目录并加入 PATH，便于 windeployqt 等可执行文件可被调用
+            # Qt5Config.cmake 通常位于 <QtRoot>\lib\cmake\Qt5
+            $dirObj = Get-Item $found.Directory.FullName
+            $qtroot = $dirObj.Parent.Parent.Parent.FullName
+            $qtbin = Join-Path $qtroot 'bin'
+            Write-Host "Inferred Qt root: $qtroot"
+            Write-Host "Adding Qt bin to PATH: $qtbin"
+            "PATH=$qtbin;$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          } else {
+            Write-Error "Qt5Config.cmake not found. Ensure the Install Qt step succeeded and that the chosen action places Qt on disk."
+            exit 1
+          }
+
       - name: Generate project and build
         working-directory: Build
         run: |
@@ -89,7 +139,7 @@ jobs:
                 -A ${{ env.PLATFORM_NAME }} ^
                 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
-                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/msvc2022 ^
+                -DQt5_DIR=%Qt5_DIR% ^
                 -DAPD_GENERATE_INSTALLER=ON ^
                 -DAPD_BUILD_GIT_HASH=${{ github.sha }} ^
                 ../../
