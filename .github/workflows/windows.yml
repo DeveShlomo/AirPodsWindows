@@ -17,16 +17,33 @@ on:
 
   workflow_dispatch:
 
-env:
-  PLATFORM_NAME: Win32
-  BUILD_TYPE: RelWithDebInfo
-  UPLOAD_ARTIFACT: true
-  CACHE_DEPS: true
-  FIXED_CMAKE_VERSION: 3.21.4
+# 移除全局 env，因为现在使用矩阵
+# env:
+#   PLATFORM_NAME: Win32
+#   BUILD_TYPE: RelWithDebInfo
+#   UPLOAD_ARTIFACT: true
+#   CACHE_DEPS: true
+#   FIXED_CMAKE_VERSION: 3.21.4
 
 jobs:
   Build:
     runs-on: windows-2022
+    # 添加策略矩阵，同时构建 Win32 和 x64
+    strategy:
+      matrix:
+        platform: [Win32, x64]
+      fail-fast: false  # 如果一个失败，继续其他
+
+    # 移动 env 到 job 级别，根据矩阵调整
+    env:
+      PLATFORM_NAME: ${{ matrix.platform }}
+      BUILD_TYPE: RelWithDebInfo
+      UPLOAD_ARTIFACT: true
+      CACHE_DEPS: true
+      FIXED_CMAKE_VERSION: 3.21.4
+      # 新增：根据平台设置 vcpkg triplet 和 Qt 路径
+      TRIPLET: ${{ matrix.platform == 'Win32' && 'x86-windows' || 'x64-windows' }}
+      QT_DIR: ${{ matrix.platform == 'Win32' && 'msvc2019' || 'msvc2019_64' }}
 
     defaults:
       run:
@@ -53,7 +70,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Build/AirPodsDesktop-Deps
-          key: ${{ hashFiles('Build/DepsRef.json') }}
+          # 修改缓存键，包含平台以避免冲突
+          key: ${{ hashFiles('Build/DepsRef.json') }}-${{ matrix.platform }}
 
       - name: Clone dependencies
         if: env.CACHE_DEPS != 'true' || steps.cache-deps.outputs.cache-hit != 'true'
@@ -81,7 +99,8 @@ jobs:
         working-directory: Build
         run: |
           ren ..\vcpkg.json vcpkg.json.bak
-          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows boost-pfr:x86-windows boost-stacktrace:x86-windows
+          # 修改：使用 TRIPLET 变量
+          .\vcpkg\vcpkg install magic-enum:${{ env.TRIPLET }} cxxopts:${{ env.TRIPLET }} nlohmann-json:${{ env.TRIPLET }} boost-pfr:${{ env.TRIPLET }} boost-stacktrace:${{ env.TRIPLET }}
           ren ..\vcpkg.json.bak vcpkg.json
 
       - name: Generate project and build
@@ -94,8 +113,9 @@ jobs:
                 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
                 -DVCPKG_MANIFEST_MODE=OFF ^
-                -DVCPKG_TARGET_TRIPLET=x86-windows ^
-                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/msvc2019 ^
+                -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} ^
+                # 修改：使用 QT_DIR 变量
+                -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/${{ env.QT_DIR }} ^
                 -DAPD_GENERATE_INSTALLER=ON ^
                 -DAPD_BUILD_GIT_HASH=${{ github.sha }} ^
                 ../../
@@ -111,13 +131,15 @@ jobs:
         working-directory: Build\${{ env.BUILD_TYPE }}\Installer
         run: |
           cd _CPack_Packages\win32\NSIS
-          move AirPodsDesktop-*-win32 AirPodsDesktop-${{ github.sha }}-win32
+          # 修改：包含平台信息
+          move AirPodsDesktop-*-win32 AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}
 
       - name: Upload artifact - Installer
         uses: actions/upload-artifact@v4
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: AirPodsDesktop-${{ github.sha }}-Installer
+          # 修改：包含平台信息
+          name: AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}-Installer
           path: Build\${{ env.BUILD_TYPE }}\Installer\AirPodsDesktop-*-win32.exe
           retention-days: 90
 
@@ -125,6 +147,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: AirPodsDesktop-${{ github.sha }}-Portable
-          path: Build\${{ env.BUILD_TYPE }}\Installer\_CPack_Packages\win32\NSIS\AirPodsDesktop-${{ github.sha }}-win32\AirPodsDesktop
+          # 修改：包含平台信息
+          name: AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}-Portable
+          path: Build\${{ env.BUILD_TYPE }}\Installer\_CPack_Packages\win32\NSIS\AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}\AirPodsDesktop
           retention-days: 90
