@@ -189,8 +189,8 @@ Dernière version: %2%3</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>AirPodsDesktop information</source>
-        <translation>AirPodsDesktop information</translation>
+        <source>AirPodsWindows information</source>
+        <translation>AirPodsWindows information</translation>
     </message>
 </context>
 <context>
@@ -299,8 +299,8 @@ Vous devez d&apos;abord appairer vos AirPods dans les paramètres Bluetooth de W
 <context>
     <name>SettingsWindow</name>
     <message>
-        <source>AirPodsDesktop Settings</source>
-        <translation>AirPodsDesktop Paramètres</translation>
+        <source>AirPodsWindows Settings</source>
+        <translation>AirPodsWindows Paramètres</translation>
     </message>
     <message>
         <source>General</source>

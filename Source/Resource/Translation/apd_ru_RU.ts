@@ -189,8 +189,8 @@ Latest version: %2%3</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>AirPodsDesktop information</source>
-        <translation>Информация о AirPodsDesktop</translation>
+        <source>AirPodsWindows information</source>
+        <translation>Информация о AirPodsWindows</translation>
     </message>
 </context>
 <context>
@@ -299,8 +299,8 @@ You need to pair your AirPods in Windows Bluetooth Settings first.</source>
 <context>
     <name>SettingsWindow</name>
     <message>
-        <source>AirPodsDesktop Settings</source>
-        <translation>Настройки AirPodsDesktop</translation>
+        <source>AirPodsWindows Settings</source>
+        <translation>Настройки AirPodsWindows</translation>
     </message>
     <message>
         <source>General</source>

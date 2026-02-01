@@ -115,20 +115,20 @@ jobs:
         working-directory: Build\${{ env.BUILD_TYPE }}\Installer
         run: |
           cd _CPack_Packages\${{ env.NSIS_ARCH }}\NSIS
-          move AirPodsDesktop-*-${{ env.NSIS_ARCH }} AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}
+          move AirPodsWindows-*-${{ env.NSIS_ARCH }} AirPodsWindows-${{ github.sha }}-${{ matrix.platform }}
 
       - name: Upload artifact - Installer
         uses: actions/upload-artifact@v4
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}-Installer
-          path: Build\${{ env.BUILD_TYPE }}\Installer\AirPodsDesktop-*-${{ env.NSIS_ARCH }}.exe
+          name: AirPodsWindows-${{ github.sha }}-${{ matrix.platform }}-Installer
+          path: Build\${{ env.BUILD_TYPE }}\Installer\AirPodsWindows-*-${{ env.NSIS_ARCH }}.exe
           retention-days: 90
 
       - name: Upload artifact - Portable
         uses: actions/upload-artifact@v4
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}-Portable
-          path: Build\${{ env.BUILD_TYPE }}\Installer\_CPack_Packages\${{ env.NSIS_ARCH }}\NSIS\AirPodsDesktop-${{ github.sha }}-${{ matrix.platform }}\AirPodsDesktop
+          name: AirPodsWindows-${{ github.sha }}-${{ matrix.platform }}-Portable
+          path: Build\${{ env.BUILD_TYPE }}\Installer\_CPack_Packages\${{ env.NSIS_ARCH }}\NSIS\AirPodsWindows-${{ github.sha }}-${{ matrix.platform }}\AirPodsWindows
           retention-days: 90
