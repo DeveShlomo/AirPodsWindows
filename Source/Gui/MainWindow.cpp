@@ -477,6 +477,7 @@ void MainWindow::PlayAnimation()
     _mediaPlayer->setPosition(0);
     _videoWidget->show();
     // Reinitialize video widget rendering surface after hide/show cycle
+    // This is called only on window show (not during playback loop), so performance impact is minimal
     _mediaPlayer->setVideoOutput(_videoWidget);
     _mediaPlayer->play();
 }
