@@ -77,27 +77,29 @@ jobs:
           git clone --recursive https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
 
-      - name: Install dependencies from manifest
+      - name: Install vcpkg dependencies
+        working-directory: Build
         run: |
-          .\Build\vcpkg\vcpkg install --triplet=x86-windows --x-manifest-root=.
+          .\vcpkg\vcpkg install magic-enum:x86-windows cxxopts:x86-windows nlohmann-json:x86-windows --recurse
 
       - name: Generate project and build
         working-directory: Build
         run: |
           mkdir ${{ env.BUILD_TYPE }} && cd ${{ env.BUILD_TYPE }}
-
+      
           cmake -G "Visual Studio 17 2022" ^
                 -A ${{ env.PLATFORM_NAME }} ^
                 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake ^
+                -DVCPKG_TARGET_TRIPLET=x86-windows ^
                 -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Build/AirPodsDesktop-Deps/Qt/5.15.2/msvc2019 ^
                 -DAPD_GENERATE_INSTALLER=ON ^
                 -DAPD_BUILD_GIT_HASH=${{ github.sha }} ^
                 ../../
-
+      
           cmake --build . ^
                 --config ${{ env.BUILD_TYPE }}
-
+      
           dir /s Binary
           dir /s Installer
 
