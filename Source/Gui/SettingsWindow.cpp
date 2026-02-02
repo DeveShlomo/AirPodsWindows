@@ -86,7 +86,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog{parent}
 
     auto versionText =
         QString{"<a href=\"%1\">v%2</a>"}
-            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/" CONFIG_VERSION_STRING)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/v" CONFIG_VERSION_STRING)
             .arg(CONFIG_VERSION_STRING);
 #if defined APD_BUILD_GIT_HASH
     versionText +=
@@ -159,6 +159,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog{parent}
     connect(_ui.cbConversationalAwareness, &QCheckBox::toggled, this, [this](bool checked) {
         if (_trigger) {
             On_cbConversationalAwareness_toggled(checked);
+        }
+    });
+
+    connect(_ui.sliderConversationalAwarenessVolume, &QSlider::valueChanged, this, [this](int value) {
+        if (_trigger) {
+            On_sliderConversationalAwarenessVolume_valueChanged(value);
         }
     });
 
@@ -320,7 +326,8 @@ void SettingsWindow::InitCreditsText()
         };
         static std::vector<RefInfo> refs{
             // clang-format off
-            { "librepods", "https://github.com/kavishdevar/librepods", "AAP protocol & MagicAAP driver" },
+            { "librepods", "https://github.com/kavishdevar/librepods", "AAP protocol reverse engineering" },
+            { "MagicAAP", "https://magicpods.app/magicaap/", "MagicAAP driver for ANC features" },
             { "OpenPods", "https://github.com/adolfintel/OpenPods", "AirPods BLE protocol" },
             { "AirPodsDesktop", "https://github.com/SpriteOvO/AirPodsDesktop", "Original project" }
             // clang-format on
@@ -363,6 +370,9 @@ void SettingsWindow::Update(const Fields &fields, bool trigger)
     _ui.cbAutoEarDetection->setChecked(fields.automatic_ear_detection);
 
     _ui.cbConversationalAwareness->setChecked(fields.conversational_awareness);
+
+    _ui.sliderConversationalAwarenessVolume->setValue(fields.conversational_awareness_volume_percent);
+    _ui.lblConversationalAwarenessVolumeValue->setText(QString::number(fields.conversational_awareness_volume_percent) + "%");
 
     _ui.cbPersonalizedVolume->setChecked(fields.personalized_volume);
 
@@ -487,6 +497,12 @@ void SettingsWindow::On_cbAutoEarDetection_toggled(bool checked)
 void SettingsWindow::On_cbConversationalAwareness_toggled(bool checked)
 {
     ModifiableAccess()->conversational_awareness = checked;
+}
+
+void SettingsWindow::On_sliderConversationalAwarenessVolume_valueChanged(int value)
+{
+    _ui.lblConversationalAwarenessVolumeValue->setText(QString::number(value) + "%");
+    ModifiableAccess()->conversational_awareness_volume_percent = static_cast<uint8_t>(value);
 }
 
 void SettingsWindow::On_cbPersonalizedVolume_toggled(bool checked)

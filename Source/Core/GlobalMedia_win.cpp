@@ -561,9 +561,10 @@ void Controller::SetVolume(int percent)
     bool isReducing = percent < 100;
     bool hasVolumeReduction = _savedVolume > 0;
     
-    // Save current volume before reducing (if this is the first reduction)
-    if (isReducing && !hasVolumeReduction) {
-        // Get actual current volume
+    // Save current volume before reducing
+    // ALWAYS re-read the actual volume to ensure we capture user's manual changes
+    if (isReducing && !_inReductionSession) {
+        // Get actual current volume from the system
         int currentVolume = 100;
         try {
             OS::Windows::Com::UniquePtr<IMMDeviceEnumerator> deviceEnumerator;
@@ -588,18 +589,23 @@ void Controller::SetVolume(int percent)
             }
         } catch (...) {}
         _savedVolume = currentVolume;
+        _inReductionSession = true;
+        LOG(Trace, "SetVolume: Saved current volume {}% before reduction, starting session", _savedVolume);
     }
     
     // Calculate target volume
     int targetPercent;
     if (percent == 100 && hasVolumeReduction) {
         // Restoring - use saved volume
+        // Keep _savedVolume to handle duplicate restoration calls
+        // It will be cleared when the next reduction cycle starts
         targetPercent = _savedVolume;
-        // Clear saved volume after restoring
-        _savedVolume = 0;
+        _inReductionSession = false;
+        LOG(Trace, "SetVolume: Restoring to saved volume {}%, ending session", targetPercent);
     } else if (isReducing && _savedVolume > 0) {
         // Reducing - calculate relative to saved volume
         targetPercent = (percent * _savedVolume) / 100;
+        LOG(Trace, "SetVolume: Reducing to {}% ({}% of saved {}%)", targetPercent, percent, _savedVolume);
     } else {
         // No reduction state - just set the percent
         targetPercent = percent;
@@ -687,4 +693,13 @@ int Controller::GetVolume() const
         return 100;
     }
 }
+
+void Controller::ClearVolumeReductionState()
+{
+    std::lock_guard<std::mutex> lock{_mutex};
+    _savedVolume = 0;
+    _inReductionSession = false;
+    LOG(Trace, "ClearVolumeReductionState: Cleared saved volume state");
+}
+
 } // namespace Core::GlobalMedia

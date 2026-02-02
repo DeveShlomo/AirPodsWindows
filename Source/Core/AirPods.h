@@ -166,6 +166,7 @@ public:
     void OnAutomaticEarDetectionChanged(bool enable);
     void OnBoundDeviceAddressChanged(uint64_t address);
     void OnConversationalAwarenessChanged(bool enable);
+    void OnConversationalAwarenessVolumePercentChanged(uint8_t percent);
     void OnPersonalizedVolumeChanged(bool enable);
     void OnLoudSoundReductionChanged(bool enable);
     void OnAdaptiveTransparencyLevelChanged(uint8_t level);
@@ -203,9 +204,11 @@ private:
     bool _deviceConnected{false};
     bool _automaticEarDetection{false};
     bool _conversationalAwarenessEnabled{false};
+    uint8_t _conversationalAwarenessVolumePercent{40};
     bool _personalizedVolumeEnabled{false};
     bool _loudSoundReductionEnabled{false};
     uint8_t _adaptiveTransparencyLevel{25};
+    std::optional<AAP::NoiseControlMode> _currentNoiseControlMode;
     
     // AAP Manager for L2CAP protocol communication
     AAP::Manager _aapMgr;

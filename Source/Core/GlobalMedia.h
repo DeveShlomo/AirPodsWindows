@@ -43,4 +43,10 @@ inline int GetVolume()
 {
     return Controller::GetInstance().GetVolume();
 }
+
+inline void ClearVolumeReductionState()
+{
+    Controller::GetInstance().ClearVolumeReductionState();
+}
+
 } // namespace Core::GlobalMedia

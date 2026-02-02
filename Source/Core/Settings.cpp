@@ -92,6 +92,14 @@ void OnApply_conversational_awareness(const Fields &newFields)
         newFields.conversational_awareness);
 }
 
+void OnApply_conversational_awareness_volume_percent(const Fields &newFields)
+{
+    LOG(Info, "OnApply_conversational_awareness_volume_percent: {}", newFields.conversational_awareness_volume_percent);
+
+    ApdApp->GetMainWindow()->GetApdMgr().OnConversationalAwarenessVolumePercentChanged(
+        newFields.conversational_awareness_volume_percent);
+}
+
 void OnApply_personalized_volume(const Fields &newFields)
 {
     LOG(Info, "OnApply_personalized_volume: {}", newFields.personalized_volume);

@@ -865,6 +865,14 @@ void Manager::OnConversationalAwarenessChanged(bool enable)
     }
 }
 
+void Manager::OnConversationalAwarenessVolumePercentChanged(uint8_t percent)
+{
+    std::lock_guard<std::mutex> lock{_mutex};
+    // Clamp the value to valid range (10-100) matching UI slider constraints
+    _conversationalAwarenessVolumePercent = std::clamp(percent, uint8_t{10}, uint8_t{100});
+    LOG(Info, "Conversational awareness volume percent changed to {}%", _conversationalAwarenessVolumePercent);
+}
+
 void Manager::OnPersonalizedVolumeChanged(bool enable)
 {
     std::lock_guard<std::mutex> lock{_mutex};
@@ -909,6 +917,9 @@ void Manager::OnNoiseControlModeChanged(AAP::NoiseControlMode mode)
 void Manager::OnNoiseControlModeNotification(AAP::NoiseControlMode mode)
 {
     LOG(Info, "Noise control mode changed to: {}", Helper::ToString(mode).toStdString());
+    
+    // Track the current noise control mode
+    _currentNoiseControlMode = mode;
     
     // Update the cached state in the state manager if we have a current state
     auto state = _stateMgr.GetCurrentState();
@@ -968,8 +979,9 @@ void Manager::OnHeadTrackingData(AAP::HeadTrackingData data)
 }
 
 // Volume levels for conversational awareness
-constexpr int kConversationalAwarenessVolumePercent = 40;  // Volume when user is speaking
-constexpr int kFullVolumePercent = 100;  // Normal volume when not speaking
+// kFullVolumePercent (100) signals to GlobalMedia::SetVolume to restore the saved pre-speaking volume
+// The actual restoration logic is in GlobalMedia_win.cpp which restores to the saved volume, not literally 100%
+constexpr int kFullVolumePercent = 100;  // Signal value to restore to original volume
 
 void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
 {
@@ -977,11 +989,19 @@ void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
         return;
     }
     
+    // Disable conversational awareness in transparency mode to avoid volume restoration bugs
+    // The AAP firmware in transparency mode doesn't reliably send restoration events
+    if (_currentNoiseControlMode.has_value() && 
+        _currentNoiseControlMode.value() == AAP::NoiseControlMode::Transparency) {
+        LOG(Info, "Conversational awareness disabled in transparency mode to avoid volume bugs");
+        return;
+    }
+    
     switch (level) {
         case AAP::SpeakingLevel::StartedSpeaking_GreatlyReduce:
         case AAP::SpeakingLevel::StartedSpeaking_GreatlyReduce2:
-            LOG(Info, "User started speaking - reducing media volume to {}%", kConversationalAwarenessVolumePercent);
-            Core::GlobalMedia::SetVolume(kConversationalAwarenessVolumePercent);
+            LOG(Info, "User started speaking - reducing media volume to {}%", _conversationalAwarenessVolumePercent);
+            Core::GlobalMedia::SetVolume(_conversationalAwarenessVolumePercent);
             break;
             
         case AAP::SpeakingLevel::StoppedSpeaking:
@@ -992,7 +1012,12 @@ void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
             break;
             
         default:
-            // Intermediate levels - could implement gradual volume adjustment
+            // Intermediate levels (0x04-0x07) - restore volume to be safe
+            // This ensures volume is restored even if final event is missed
+            if (static_cast<uint8_t>(level) >= 0x04 && static_cast<uint8_t>(level) <= 0x07) {
+                LOG(Info, "Intermediate speaking level detected - restoring media volume");
+                Core::GlobalMedia::SetVolume(kFullVolumePercent);
+            }
             break;
     }
 }

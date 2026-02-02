@@ -47,7 +47,7 @@
 - **操作系统**: Windows 10/11
 - **蓝牙**: 需要蓝牙 4.0+ 适配器
 - **AirPods**: 支持所有 AirPods 型号
-- **ANC 功能**: 需要安装 [MagicAAP 驱动](https://github.com/kavishdevar/librepods)（仅 AirPods Pro/Max/AirPods 4 ANC）
+- **ANC 功能**: 需要安装 [MagicAAP 驱动](https://magicpods.app/magicaap/)（仅 AirPods Pro/Max/AirPods 4 ANC）
 
 ## 📦 安装
 

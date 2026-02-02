@@ -78,10 +78,12 @@ public:
     void Pause() override;
     void SetVolume(int percent);
     int GetVolume() const;
+    void ClearVolumeReductionState();  // Explicitly clear saved volume state
 
 private:
     std::mutex _mutex;
     std::vector<std::unique_ptr<Details::MediaProgramAbstract>> _pausedPrograms;
     int _savedVolume{0};  // Saved volume before reduction; 0 means no active reduction
+    bool _inReductionSession{false};  // Track if we're currently in a volume reduction session
 };
 } // namespace Core::GlobalMedia

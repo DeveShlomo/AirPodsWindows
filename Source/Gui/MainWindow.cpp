@@ -472,22 +472,26 @@ void MainWindow::PlayAnimation()
 {
     _isAnimationPlaying = true;
     // Stop player and reset position for clean replay
-    // Qt's QMediaPlayer handles these synchronously in the event loop
     _mediaPlayer->stop();
     _mediaPlayer->setPosition(0);
-    _videoWidget->show();
-    // Reinitialize video widget rendering surface after hide/show cycle
-    // This is called only on window show (not during playback loop), so performance impact is minimal
-    _mediaPlayer->setVideoOutput(_videoWidget);
+    
+    // Ensure video widget is visible - critical for x64 builds
+    // The widget must be visible and have its video output set before playing
+    if (!_videoWidget->isVisible()) {
+        _videoWidget->show();
+        // On x64, we need to ensure the video output is properly connected after showing
+        _mediaPlayer->setVideoOutput(static_cast<QVideoWidget*>(nullptr));
+        _mediaPlayer->setVideoOutput(_videoWidget);
+    }
+    
     _mediaPlayer->play();
 }
 
 void MainWindow::StopAnimation()
 {
-    // The player will go black after stopping
-    // I have no idea about this, so let's hide the widget here as a workaround
-    _videoWidget->hide();
-
+    // Stop the player but keep widget visible to avoid x64 rendering issues
+    // The widget will be black when stopped, but this is better than becoming
+    // transparent/hollow on x64 builds
     _isAnimationPlaying = false;
     _mediaPlayer->stop();
 }
