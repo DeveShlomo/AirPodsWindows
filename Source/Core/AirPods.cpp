@@ -1001,7 +1001,12 @@ void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
             break;
             
         default:
-            // Intermediate levels - could implement gradual volume adjustment
+            // Intermediate levels (0x04-0x07) - restore volume to be safe
+            // This ensures volume is restored even if final event is missed
+            if (static_cast<uint8_t>(level) >= 0x04 && static_cast<uint8_t>(level) <= 0x07) {
+                LOG(Info, "Intermediate speaking level detected - restoring media volume");
+                Core::GlobalMedia::SetVolume(kFullVolumePercent);
+            }
             break;
     }
 }

@@ -371,6 +371,10 @@ You need to pair your AirPods in Windows Bluetooth Settings first.</source>
         <translation>對話感知</translation>
     </message>
     <message>
+        <source>Speaking volume reduction:</source>
+        <translation>說話時音量降低至：</translation>
+    </message>
+    <message>
         <source>Automatic ear detection</source>
         <translation>自動人耳檢測</translation>
     </message>
