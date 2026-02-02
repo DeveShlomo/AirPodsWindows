@@ -588,6 +588,8 @@ void Controller::SetVolume(int percent)
             }
         } catch (...) {}
         _savedVolume = currentVolume;
+        _inReductionSession = true;
+        LOG(Trace, "SetVolume: Saved volume {}% before reduction, starting session", _savedVolume);
     }
     
     // Calculate target volume
@@ -595,11 +597,15 @@ void Controller::SetVolume(int percent)
     if (percent == 100 && hasVolumeReduction) {
         // Restoring - use saved volume
         targetPercent = _savedVolume;
-        // Clear saved volume after restoring
-        _savedVolume = 0;
+        // Mark session as complete, but DON'T clear _savedVolume yet
+        // This prevents subsequent SetVolume(100) calls from jumping to literal 100%
+        // The saved volume will be cleared on the next reduction cycle or explicit clear
+        _inReductionSession = false;
+        LOG(Trace, "SetVolume: Restoring to saved volume {}%, session complete", targetPercent);
     } else if (isReducing && _savedVolume > 0) {
         // Reducing - calculate relative to saved volume
         targetPercent = (percent * _savedVolume) / 100;
+        LOG(Trace, "SetVolume: Reducing to {}% ({}% of saved {}%)", targetPercent, percent, _savedVolume);
     } else {
         // No reduction state - just set the percent
         targetPercent = percent;
@@ -687,4 +693,13 @@ int Controller::GetVolume() const
         return 100;
     }
 }
+
+void Controller::ClearVolumeReductionState()
+{
+    std::lock_guard<std::mutex> lock{_mutex};
+    _savedVolume = 0;
+    _inReductionSession = false;
+    LOG(Trace, "ClearVolumeReductionState: Cleared saved volume state");
+}
+
 } // namespace Core::GlobalMedia

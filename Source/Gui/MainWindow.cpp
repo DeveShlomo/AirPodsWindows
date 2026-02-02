@@ -475,13 +475,26 @@ void MainWindow::PlayAnimation()
     // Qt's QMediaPlayer handles these synchronously in the event loop
     _mediaPlayer->stop();
     _mediaPlayer->setPosition(0);
-    _videoWidget->show();
+    
     // Reinitialize video widget rendering surface after hide/show cycle
     // This is critical for x64 builds to prevent transparent/hollow video area
-    // Force recreation of the native window handle to ensure proper rendering
-    // Calling winId() for its side effect - it creates/retrieves the native window handle
-    (void)_videoWidget->winId();
+    // Try multiple approaches to ensure the rendering surface is properly initialized:
+    
+    // 1. Detach media player completely
     _mediaPlayer->setVideoOutput(static_cast<QVideoWidget*>(nullptr));
+    
+    // 2. Force widget to recreate its native window handle
+    _videoWidget->hide();
+    _videoWidget->show();
+    _videoWidget->update();
+    _videoWidget->repaint();
+    
+    // 3. Force native window handle creation and ensure it's visible
+    (void)_videoWidget->winId();
+    _videoWidget->setAttribute(Qt::WA_PaintOnScreen, true);
+    _videoWidget->setAttribute(Qt::WA_NativeWindow, true);
+    
+    // 4. Reattach media player
     _mediaPlayer->setVideoOutput(_videoWidget);
     _mediaPlayer->play();
 }
