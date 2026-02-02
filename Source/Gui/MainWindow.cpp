@@ -481,7 +481,7 @@ void MainWindow::PlayAnimation()
     // Force recreation of the native window handle to ensure proper rendering
     // Calling winId() for its side effect - it creates/retrieves the native window handle
     (void)_videoWidget->winId();
-    _mediaPlayer->setVideoOutput(nullptr);
+    _mediaPlayer->setVideoOutput(static_cast<QVideoWidget*>(nullptr));
     _mediaPlayer->setVideoOutput(_videoWidget);
     _mediaPlayer->play();
 }
