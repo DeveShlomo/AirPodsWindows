@@ -47,7 +47,7 @@
 - **OS**: Windows 10/11
 - **Bluetooth**: Requires Bluetooth 4.0+ adapter
 - **AirPods**: All AirPods models supported
-- **ANC Features**: Requires [MagicAAP driver](https://github.com/kavishdevar/librepods) (AirPods Pro/Max/AirPods 4 ANC only)
+- **ANC Features**: Requires [MagicAAP driver](https://magicpods.app/magicaap/) (AirPods Pro/Max/AirPods 4 ANC only)
 
 ## 📦 Installation
 

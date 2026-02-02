@@ -865,6 +865,16 @@ void Manager::OnConversationalAwarenessChanged(bool enable)
     }
 }
 
+void Manager::OnConversationalAwarenessVolumePercentChanged(uint8_t percent)
+{
+    std::lock_guard<std::mutex> lock{_mutex};
+    // Clamp the value to valid range (1-100)
+    if (percent < 1) percent = 1;
+    if (percent > 100) percent = 100;
+    _conversationalAwarenessVolumePercent = percent;
+    LOG(Info, "Conversational awareness volume percent changed to {}%", percent);
+}
+
 void Manager::OnPersonalizedVolumeChanged(bool enable)
 {
     std::lock_guard<std::mutex> lock{_mutex};
@@ -968,7 +978,7 @@ void Manager::OnHeadTrackingData(AAP::HeadTrackingData data)
 }
 
 // Volume levels for conversational awareness
-constexpr int kConversationalAwarenessVolumePercent = 40;  // Volume when user is speaking
+// kFullVolumePercent is used to restore to the original volume (before speaking)
 constexpr int kFullVolumePercent = 100;  // Normal volume when not speaking
 
 void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
@@ -980,8 +990,8 @@ void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
     switch (level) {
         case AAP::SpeakingLevel::StartedSpeaking_GreatlyReduce:
         case AAP::SpeakingLevel::StartedSpeaking_GreatlyReduce2:
-            LOG(Info, "User started speaking - reducing media volume to {}%", kConversationalAwarenessVolumePercent);
-            Core::GlobalMedia::SetVolume(kConversationalAwarenessVolumePercent);
+            LOG(Info, "User started speaking - reducing media volume to {}%", _conversationalAwarenessVolumePercent);
+            Core::GlobalMedia::SetVolume(_conversationalAwarenessVolumePercent);
             break;
             
         case AAP::SpeakingLevel::StoppedSpeaking:

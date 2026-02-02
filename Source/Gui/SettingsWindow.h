@@ -69,6 +69,7 @@ private:
     void On_cbLowAudioLatency_toggled(bool checked);
     void On_cbAutoEarDetection_toggled(bool checked);
     void On_cbConversationalAwareness_toggled(bool checked);
+    void On_sliderConversationalAwarenessVolume_valueChanged(int value);
     void On_cbPersonalizedVolume_toggled(bool checked);
     void On_cbLoudSoundReduction_toggled(bool checked);
     void On_cbNoiseControlMode_currentIndexChanged(int index);

@@ -46,6 +46,9 @@ enum class LoadResult : uint32_t { AbiIncompatible, NoAbiField, Successful };
     callback(bool, conversational_awareness, {false},                                              \
         Impl::OnApply(&OnApply_conversational_awareness),                                          \
         Impl::Desc{QObject::tr("Automatically lowers media volume when you start speaking (AirPods Pro/Max only).")}) \
+    callback(uint8_t, conversational_awareness_volume_percent, {40},                               \
+        Impl::OnApply(&OnApply_conversational_awareness_volume_percent),                           \
+        Impl::Desc{QObject::tr("Volume percentage when speaking (based on your pre-speaking volume).")}) \
     callback(bool, personalized_volume, {false},                                                   \
         Impl::OnApply(&OnApply_personalized_volume),                                               \
         Impl::Desc{QObject::tr("Adjusts media volume based on your environment and listening habits.")}) \
@@ -227,6 +230,7 @@ void OnApply_auto_run(const Fields &newFields);
 void OnApply_low_audio_latency(const Fields &newFields);
 void OnApply_automatic_ear_detection(const Fields &newFields);
 void OnApply_conversational_awareness(const Fields &newFields);
+void OnApply_conversational_awareness_volume_percent(const Fields &newFields);
 void OnApply_personalized_volume(const Fields &newFields);
 void OnApply_loud_sound_reduction(const Fields &newFields);
 void OnApply_adaptive_transparency_level(const Fields &newFields);
