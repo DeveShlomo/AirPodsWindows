@@ -595,11 +595,12 @@ void Controller::SetVolume(int percent)
     
     // Calculate target volume
     int targetPercent;
-    if (percent == 100 && hasVolumeReduction && _inReductionSession) {
-        // Restoring - use saved volume and clear the session
+    if (percent == 100 && hasVolumeReduction) {
+        // Restoring - use saved volume
+        // Keep _savedVolume to handle duplicate restoration calls
+        // It will be cleared when the next reduction cycle starts
         targetPercent = _savedVolume;
         _inReductionSession = false;
-        _savedVolume = 0;  // Clear saved volume after restoration
         LOG(Trace, "SetVolume: Restoring to saved volume {}%, ending session", targetPercent);
     } else if (isReducing && _savedVolume > 0) {
         // Reducing - calculate relative to saved volume
