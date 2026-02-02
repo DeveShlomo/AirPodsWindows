@@ -907,10 +907,6 @@ void Manager::OnNoiseControlModeChanged(AAP::NoiseControlMode mode)
 {
     std::lock_guard<std::mutex> lock{_mutex};
     
-    // Clear any volume reduction state when changing noise control mode
-    // This prevents stale volume state from interfering with the new mode
-    Core::GlobalMedia::ClearVolumeReductionState();
-    
     if (_aapMgr.IsConnected()) {
         _aapMgr.SetNoiseControlMode(mode);
     }

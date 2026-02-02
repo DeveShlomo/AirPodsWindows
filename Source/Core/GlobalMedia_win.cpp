@@ -561,9 +561,10 @@ void Controller::SetVolume(int percent)
     bool isReducing = percent < 100;
     bool hasVolumeReduction = _savedVolume > 0;
     
-    // Save current volume before reducing (if this is the first reduction)
-    if (isReducing && !hasVolumeReduction) {
-        // Get actual current volume
+    // Save current volume before reducing
+    // ALWAYS re-read the actual volume to ensure we capture user's manual changes
+    if (isReducing && !_inReductionSession) {
+        // Get actual current volume from the system
         int currentVolume = 100;
         try {
             OS::Windows::Com::UniquePtr<IMMDeviceEnumerator> deviceEnumerator;
@@ -589,19 +590,17 @@ void Controller::SetVolume(int percent)
         } catch (...) {}
         _savedVolume = currentVolume;
         _inReductionSession = true;
-        LOG(Trace, "SetVolume: Saved volume {}% before reduction, starting session", _savedVolume);
+        LOG(Trace, "SetVolume: Saved current volume {}% before reduction, starting session", _savedVolume);
     }
     
     // Calculate target volume
     int targetPercent;
-    if (percent == 100 && hasVolumeReduction) {
-        // Restoring - use saved volume
+    if (percent == 100 && hasVolumeReduction && _inReductionSession) {
+        // Restoring - use saved volume and clear the session
         targetPercent = _savedVolume;
-        // Mark session as complete, but DON'T clear _savedVolume yet
-        // This prevents subsequent SetVolume(100) calls from jumping to literal 100%
-        // The saved volume will be cleared on the next reduction cycle or explicit clear
         _inReductionSession = false;
-        LOG(Trace, "SetVolume: Restoring to saved volume {}%, session complete", targetPercent);
+        _savedVolume = 0;  // Clear saved volume after restoration
+        LOG(Trace, "SetVolume: Restoring to saved volume {}%, ending session", targetPercent);
     } else if (isReducing && _savedVolume > 0) {
         // Reducing - calculate relative to saved volume
         targetPercent = (percent * _savedVolume) / 100;
