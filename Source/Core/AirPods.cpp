@@ -868,11 +868,9 @@ void Manager::OnConversationalAwarenessChanged(bool enable)
 void Manager::OnConversationalAwarenessVolumePercentChanged(uint8_t percent)
 {
     std::lock_guard<std::mutex> lock{_mutex};
-    // Clamp the value to valid range (1-100)
-    if (percent < 1) percent = 1;
-    if (percent > 100) percent = 100;
-    _conversationalAwarenessVolumePercent = percent;
-    LOG(Info, "Conversational awareness volume percent changed to {}%", percent);
+    // Clamp the value to valid range (10-100) matching UI slider constraints
+    _conversationalAwarenessVolumePercent = std::clamp(percent, uint8_t{10}, uint8_t{100});
+    LOG(Info, "Conversational awareness volume percent changed to {}%", _conversationalAwarenessVolumePercent);
 }
 
 void Manager::OnPersonalizedVolumeChanged(bool enable)
@@ -978,8 +976,9 @@ void Manager::OnHeadTrackingData(AAP::HeadTrackingData data)
 }
 
 // Volume levels for conversational awareness
-// kFullVolumePercent is used to restore to the original volume (before speaking)
-constexpr int kFullVolumePercent = 100;  // Normal volume when not speaking
+// kFullVolumePercent (100) signals to GlobalMedia::SetVolume to restore the saved pre-speaking volume
+// The actual restoration logic is in GlobalMedia_win.cpp which restores to the saved volume, not literally 100%
+constexpr int kFullVolumePercent = 100;  // Signal value to restore to original volume
 
 void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
 {

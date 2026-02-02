@@ -479,7 +479,8 @@ void MainWindow::PlayAnimation()
     // Reinitialize video widget rendering surface after hide/show cycle
     // This is critical for x64 builds to prevent transparent/hollow video area
     // Force recreation of the native window handle to ensure proper rendering
-    _videoWidget->winId(); // Force native window creation
+    // Calling winId() for its side effect - it creates/retrieves the native window handle
+    (void)_videoWidget->winId();
     _mediaPlayer->setVideoOutput(nullptr);
     _mediaPlayer->setVideoOutput(_videoWidget);
     _mediaPlayer->play();
