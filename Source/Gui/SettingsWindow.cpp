@@ -86,7 +86,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog{parent}
 
     auto versionText =
         QString{"<a href=\"%1\">v%2</a>"}
-            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/" CONFIG_VERSION_STRING)
+            .arg("https://github.com/YimingZhanshen/AirPodsWindows/releases/tag/v" CONFIG_VERSION_STRING)
             .arg(CONFIG_VERSION_STRING);
 #if defined APD_BUILD_GIT_HASH
     versionText +=
