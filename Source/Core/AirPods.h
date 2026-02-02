@@ -208,6 +208,7 @@ private:
     bool _personalizedVolumeEnabled{false};
     bool _loudSoundReductionEnabled{false};
     uint8_t _adaptiveTransparencyLevel{25};
+    std::optional<AAP::NoiseControlMode> _currentNoiseControlMode;
     
     // AAP Manager for L2CAP protocol communication
     AAP::Manager _aapMgr;

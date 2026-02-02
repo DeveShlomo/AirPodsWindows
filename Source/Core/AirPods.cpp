@@ -918,6 +918,9 @@ void Manager::OnNoiseControlModeNotification(AAP::NoiseControlMode mode)
 {
     LOG(Info, "Noise control mode changed to: {}", Helper::ToString(mode).toStdString());
     
+    // Track the current noise control mode
+    _currentNoiseControlMode = mode;
+    
     // Update the cached state in the state manager if we have a current state
     auto state = _stateMgr.GetCurrentState();
     if (state.has_value()) {
@@ -983,6 +986,14 @@ constexpr int kFullVolumePercent = 100;  // Signal value to restore to original 
 void Manager::OnSpeakingLevelChanged(AAP::SpeakingLevel level)
 {
     if (!_conversationalAwarenessEnabled) {
+        return;
+    }
+    
+    // Disable conversational awareness in transparency mode to avoid volume restoration bugs
+    // The AAP firmware in transparency mode doesn't reliably send restoration events
+    if (_currentNoiseControlMode.has_value() && 
+        _currentNoiseControlMode.value() == AAP::NoiseControlMode::Transparency) {
+        LOG(Info, "Conversational awareness disabled in transparency mode to avoid volume bugs");
         return;
     }
     
